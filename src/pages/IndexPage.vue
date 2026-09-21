@@ -49,22 +49,20 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import SubjectList from '@/components/SubjectList.vue';
 
-const isLoad = ref([]);
-
-const subject = ref([]);
-
+const isLoading = ref(true);
+const subjects = ref([]);
 const form = ref({
   name: '',
   credit: 0,
   score: 0
 });
 
-const previewGrade = ref ('');
+const previewGrade = ref('');
 
-const calculateGrade = (score) =>{
+const calculateGrade = (score) => {
   if (score >= 80) return { grade: 'A', point: 4.0 };
   if (score >= 75) return { grade: 'B+', point: 3.5 };
   if (score >= 70) return { grade: 'B', point: 3.0 };
@@ -76,8 +74,9 @@ const calculateGrade = (score) =>{
 };
 
 watch(
-  () => {form.value.score, form.value.credit},([newScore]) => {
-    const {grade} = calculateGrade(newScore);
+  () => [form.value.score, form.value.credit],
+  ([newScore]) => {
+    const { grade } = calculateGrade(newScore);
     previewGrade.value = (newScore > 0 || form.value.credit > 0) ? grade : '';
   }
 );
@@ -85,32 +84,34 @@ watch(
 const addSubject = () => {
   if (!form.value.name || form.value.credit <= 0) return;
   const { grade, point } = calculateGrade(form.value.score);
-  subject.value.push({
-    name: form.value.credit,
+  subjects.value.push({
+    name: form.value.name,
     credit: Number(form.value.credit),
     score: Number(form.value.score),
     grade,
     point
   });
-  form.value = {name: '', credit: 0, score: 0};
-  previewGrade.value = "";
+  form.value = { name: '', credit: 0, score: 0 };
+  previewGrade.value = '';
 };
 
-const removeSubject = (index) =>{
-  subject.value.splice(index, 1);
+const removeSubject = (index) => {
+  subjects.value.splice(index, 1);
 };
 
-const totalCredit = computed(() => {
-  return subject.value.reduce((sum, subject) => sum + subject.credit, 0);
+const totalCredits = computed(() => {
+  return subjects.value.reduce((sum, subject) => sum + subject.credit, 0);
 });
 
-const  semesterGPA = computed (() => {
-  if (totalCredit.value === 0) return 0;
-  const totalPonit = subject.value.reduce((sum, subject,) => sum + (subject.point * subject.credit), 0);
-  return totalPonit / totalCredit.value;
+const semesterGPA = computed(() => {
+  if (totalCredits.value === 0) return 0;
+  const totalPoints = subjects.value.reduce((sum, subject) => sum + (subject.point * subject.credit), 0);
+  return totalPoints / totalCredits.value;
 });
 
 onMounted(() => {
-  setTimeout(() => {isLoad.value = false;}, 4000);
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 4000);
 });
 </script>

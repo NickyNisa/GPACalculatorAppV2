@@ -50,7 +50,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import SubjectList from 'components/SubjectList.vue';
+import SubjectList from '@/components/SubjectList.vue';
 
 const isLoad = ref([]);
 

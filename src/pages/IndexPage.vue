@@ -19,7 +19,7 @@
           <q-input v-model.number = "form.credit" type="number" label="หน่วยกิต" filled />
           <q-input v-model.number = "form.score" type="number" label="ตะแนน (0-100)" filled />
           <q-input v-model = "previewGrade" label="เกรดที่ได้ (พรีวิว)" filled readonly />
-          <q-btn color="primary" label = "เพิ่มรายวิชา" class="full-width" @click="addsubject" />
+          <q-btn color="primary" label = "เพิ่มรายวิชา" class="full-width" @click="addSubject" />
         </q-card-section>
     </div>
     <div class="col-12 col-md-6">
@@ -30,7 +30,7 @@
           </div>  
       </q-card>
       <div v-else>
-          <SubjectList :subjects="subjects" @delete-subject="removesubject" />
+          <SubjectList :subjects="subjects" @delete-subject="removeSubject" />
           <q-card flat bordered class="q-mt-md bg-grey-1">
             <q-card-section class="row text-center">
               <div class="col-6">
@@ -82,7 +82,7 @@ watch(
   }
 );
 
-const addsubject = () => {
+const addSubject = () => {
   if (!form.value.name || form.value.credit <= 0) return;
   const { grade, point } = calculateGrade(form.value.score);
   subject.value.push({
@@ -96,7 +96,7 @@ const addsubject = () => {
   previewGrade.value = "";
 };
 
-const removesubject = (index) =>{
+const removeSubject = (index) =>{
   subject.value.splice(index, 1);
 };
 
